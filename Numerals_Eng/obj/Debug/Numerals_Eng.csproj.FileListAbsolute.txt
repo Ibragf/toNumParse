@@ -1,0 +1,11 @@
+D:\VS2019\Numerals_Eng\bin\Debug\Numerals_Eng.exe.config
+D:\VS2019\Numerals_Eng\bin\Debug\Numerals_Eng.exe
+D:\VS2019\Numerals_Eng\bin\Debug\Numerals_Eng.pdb
+D:\VS2019\Numerals_Eng\obj\Debug\Numerals_Eng.MainWindow.resources
+D:\VS2019\Numerals_Eng\obj\Debug\Numerals_Eng.Properties.Resources.resources
+D:\VS2019\Numerals_Eng\obj\Debug\Numerals_Eng.csproj.GenerateResource.cache
+D:\VS2019\Numerals_Eng\obj\Debug\Numerals_Eng.csproj.CoreCompileInputs.cache
+D:\VS2019\Numerals_Eng\obj\Debug\Numerals_Eng.exe
+D:\VS2019\Numerals_Eng\obj\Debug\Numerals_Eng.pdb
+D:\VS2019\Numerals_Eng\obj\Debug\Numerals_Eng.csproj.AssemblyReference.cache
+D:\VS2019\Numerals_Eng\obj\Debug\Numerals_Eng.csproj.SuggestedBindingRedirects.cache
