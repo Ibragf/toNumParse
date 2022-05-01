@@ -131,9 +131,10 @@ namespace Numerals_Eng
         }
         public bool check_syntax()
         {
-            bool word_bool = true;
+            int j = 0;
             foreach (string word in words)
             {
+                j++;
                 NumeralEng numeral = new NumeralEng();
                 bool ones_bool = false;
                 //string error = "Синтансическая ошибка";
@@ -150,13 +151,6 @@ namespace Numerals_Eng
                 {
                     ones_bool = true;
                     numeral.SetTypeNum("сотня");
-                }
-
-                //союз
-                if (word == "and")
-                {
-                    ones_bool = true;
-                    numeral.SetTypeNum("союз");
                 }
 
                 //десяток
@@ -176,18 +170,6 @@ namespace Numerals_Eng
                     }
                 }
 
-
-                //coставной десяток
-                if(word.Contains("-"))
-                {
-                    string[] tens_ones = word.Split('-');
-                    if(tens_check(tens_ones[0]) && ones_check(tens_ones[1]))
-                    {
-                        ones_bool = true;
-                        numeral.SetTypeNum("составной десяток");
-                    }
-                }
-
                 if(ones_bool)
                 {
                     numeral.SetValue(word);
@@ -196,7 +178,7 @@ namespace Numerals_Eng
                 }
                 else
                 {
-                    MessageBox.Show($"Синтаксическая ошибка ({word})");
+                    MessageBox.Show($"Синтаксическая ошибка  в {j} слове({word})");
                     return false;
                 }
                 
@@ -215,39 +197,37 @@ namespace Numerals_Eng
 
                 if(numeralList[0].GetTypeNum()!="единица")
                 {
-                    MessageBox.Show("Перед сотней должна идти единица");
+                    MessageBox.Show($"На первом месте должна быть единица({numeralList[0].GetValue()})");
                     return false;   
                 }
 
                 if(numeralList.Count>=2 && numeralList[1].GetTypeNum()!="сотня")
                 {
-                    MessageBox.Show($"После единицы не может идти {numeralList[1].GetTypeNum()}");
+                    MessageBox.Show($"После единицы({numeralList[0].GetValue()}) не может идти {numeralList[1].GetTypeNum()}({numeralList[1].GetValue()})");
                     return false;
                 }
 
-
-                if (numeralList.Count >= 3 && numeralList[2].GetTypeNum() != "союз")
+                if (numeralList.Count == 3 && numeralList[2].GetTypeNum() == "сотня")
                 {
-                    //MessageBox.Show($"После сотни не может идти {numeralList[2].GetTypeNum()}");
-                    MessageBox.Show("После сотни должен быть союз and");
+                    MessageBox.Show($"После сотни({numeralList[1].GetValue()}) не может идти сотня({numeralList[2].GetValue()})");
                     return false;
                 }
 
-                if (numeralList.Count == 3)
+                if (numeralList.Count == 4 && numeralList[2].GetTypeNum() == "десяток" && numeralList[3].GetTypeNum() != "единица")
                 {
-                    MessageBox.Show("После союза должно быть числительное");
-                    return false;    
-                }
-
-                if (numeralList.Count == 4 && numeralList[3].GetTypeNum() == "сотня")
-                {
-                    MessageBox.Show($"После союза не может идти {numeralList[3].GetTypeNum()}");
+                    MessageBox.Show($"После десятка({numeralList[2].GetValue()}) не может идти {numeralList[3].GetTypeNum()}({numeralList[3].GetValue()})");
                     return false;
                 }
 
-                if (numeralList.Count == 4 && numeralList[3].GetTypeNum() == "союз")
+                if (numeralList.Count == 4 && numeralList[2].GetTypeNum() == "второй десяток")
                 {
-                    MessageBox.Show($"После союза не может идти союз");
+                    MessageBox.Show($"После второго десятка({numeralList[2].GetValue()}) не может идти {numeralList[3].GetTypeNum()}({numeralList[3].GetValue()})");
+                    return false;
+                }
+
+                if (numeralList.Count == 4 && numeralList[2].GetTypeNum() == "единица")
+                {
+                    MessageBox.Show($"После единицы({numeralList[2].GetValue()}) не может идти {numeralList[3].GetTypeNum()}({numeralList[3].GetValue()})");
                     return false;
                 }
 
@@ -271,14 +251,55 @@ namespace Numerals_Eng
                     i += 1;
                     number =  i.ToString()+ "00";
                     noStringNum = Int32.Parse(number);
-                    if(numeralList.Count != 4)
+                    /*if(numeralList.Count != 4)
                     {
                         return noStringNum;
-                    }
+                    }*/
                     break;
                 }
             }
-            if(numeralList.Count == 4)
+            if(numeralList.Count == 3)
+            {
+                if (numeralList[2].GetTypeNum() == "единица")
+                {
+                    for (int i = 0; i < ones.Length; i++)
+                    {
+                        if (numeralList[2].GetValue() == ones[i])
+                        {
+                            i += 1;
+                            noStringNum = noStringNum + i;
+                            return noStringNum;
+                        }
+                    }
+                }
+
+                if (numeralList[2].GetTypeNum()=="второй десяток")
+                {
+                    for (int i = 0; i < second_ten.Length; i++)
+                    {
+                        if (numeralList[2].GetValue() == second_ten[i])
+                        {
+                            noStringNum = noStringNum + i+11;
+                            return noStringNum;
+                        }
+                    }
+                }
+
+                if (numeralList[2].GetTypeNum() == "десяток")
+                {
+                    for (int i = 0; i < tens.Length; i++)
+                    {
+                        if (numeralList[2].GetValue() == tens[i])
+                        {
+                            i+=1;
+                            noStringNum = noStringNum + i*10;
+                            return noStringNum;
+                        }
+                    }
+                }
+            }
+
+            if (numeralList.Count == 4)
             {
                 if (numeralList[3].GetTypeNum() == "единица")
                 {
@@ -288,50 +309,44 @@ namespace Numerals_Eng
                         {
                             i += 1;
                             noStringNum = noStringNum + i;
+                        }
+                    }
+                }
+
+                if (numeralList[2].GetTypeNum() == "единица")
+                {
+                    for (int i = 0; i < ones.Length; i++)
+                    {
+                        if (numeralList[2].GetValue() == ones[i])
+                        {
+                            i += 1;
+                            noStringNum = noStringNum + i;
                             return noStringNum;
                         }
                     }
                 }
 
-                if (numeralList[3].GetTypeNum()=="второй десяток")
+                if (numeralList[2].GetTypeNum() == "второй десяток")
                 {
                     for (int i = 0; i < second_ten.Length; i++)
                     {
-                        if (numeralList[3].GetValue() == second_ten[i])
+                        if (numeralList[2].GetValue() == second_ten[i])
                         {
-                            noStringNum = noStringNum + i+11;
+                            noStringNum = noStringNum + i + 11;
                             return noStringNum;
                         }
                     }
                 }
 
-                if (numeralList[3].GetTypeNum() == "десяток")
+                if (numeralList[2].GetTypeNum() == "десяток")
                 {
                     for (int i = 0; i < tens.Length; i++)
                     {
-                        if (numeralList[3].GetValue() == tens[i])
+                        if (numeralList[2].GetValue() == tens[i])
                         {
-                            i+=1;
-                            noStringNum = noStringNum + i*10;
+                            i += 1;
+                            noStringNum = noStringNum + i * 10;
                             return noStringNum;
-                        }
-                    }
-                }
-
-                if (numeralList[3].GetTypeNum() == "составной десяток")
-                {
-                    for (int i = 0; i < tens.Length; i++)
-                    {
-                        for (int j=0;j<ones.Length;j++)
-                        {
-                            string tens_ones = tens[i] +"-"+ones[j];
-                            if (numeralList[3].GetValue()==tens_ones)
-                            {
-                                i += 1;
-                                j += 1;
-                                noStringNum = noStringNum + i*10+j;
-                                return noStringNum;
-                            }
                         }
                     }
                 }
