@@ -197,7 +197,7 @@ namespace Numerals_Eng
 
                 if(numeralList[0].GetTypeNum()!="единица")
                 {
-                    MessageBox.Show($"На первом месте должна быть единица({numeralList[0].GetValue()})");
+                    MessageBox.Show($"Перед {numeralList[0].GetValue()} должно быть число единичного формата");
                     return false;   
                 }
 
@@ -207,25 +207,25 @@ namespace Numerals_Eng
                     return false;
                 }
 
-                if (numeralList.Count == 3 && numeralList[2].GetTypeNum() == "сотня")
+                if (numeralList.Count >= 3 && numeralList[2].GetTypeNum() == "сотня")
                 {
                     MessageBox.Show($"После сотни({numeralList[1].GetValue()}) не может идти сотня({numeralList[2].GetValue()})");
                     return false;
                 }
 
-                if (numeralList.Count == 4 && numeralList[2].GetTypeNum() == "десяток" && numeralList[3].GetTypeNum() != "единица")
+                if (numeralList.Count >= 4 && numeralList[2].GetTypeNum() == "десяток" && numeralList[3].GetTypeNum() != "единица")
                 {
                     MessageBox.Show($"После десятка({numeralList[2].GetValue()}) не может идти {numeralList[3].GetTypeNum()}({numeralList[3].GetValue()})");
                     return false;
                 }
 
-                if (numeralList.Count == 4 && numeralList[2].GetTypeNum() == "второй десяток")
+                if (numeralList.Count >= 4 && numeralList[2].GetTypeNum() == "второй десяток")
                 {
                     MessageBox.Show($"После второго десятка({numeralList[2].GetValue()}) не может идти {numeralList[3].GetTypeNum()}({numeralList[3].GetValue()})");
                     return false;
                 }
 
-                if (numeralList.Count == 4 && numeralList[2].GetTypeNum() == "единица")
+                if (numeralList.Count >= 4 && numeralList[2].GetTypeNum() == "единица")
                 {
                     MessageBox.Show($"После единицы({numeralList[2].GetValue()}) не может идти {numeralList[3].GetTypeNum()}({numeralList[3].GetValue()})");
                     return false;
@@ -233,7 +233,8 @@ namespace Numerals_Eng
 
                 if (numeralList.Count >= 5)
                 {
-                    MessageBox.Show("Максимальное кол-во числительных - 4");
+                    MessageBox.Show($"После единицы({numeralList[4].GetValue()}) не может идти {numeralList[4].GetTypeNum()}({numeralList[4].GetValue()}).\n" +
+                        "Максимальное кол-во числительных - 4");
                     return false;
                 }
             }
