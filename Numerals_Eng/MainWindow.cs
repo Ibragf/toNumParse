@@ -86,17 +86,20 @@ namespace Numerals_Eng
             Regex regex_end = new Regex(@"\s+$");
             text = regex_end.Replace(text,"");
 
-            words = text.Split(' ');
-            if (check_syntax())
+            if(text!=String.Empty)
             {
-                if(check_logic())
+                words = text.Split(' ');
+                if (check_syntax())
                 {
-                    int number = conversion();
-                    if(number!=0)
+                    if (check_logic())
                     {
-                        label1.Text += number.ToString();
-                        label2.Text = toRomanNum(number);
-                        label2.Visible = true;
+                        int number = conversion();
+                        if (number != 0)
+                        {
+                            label1.Text += number.ToString();
+                            label2.Text = toRomanNum(number);
+                            label2.Visible = true;
+                        }
                     }
                 }
             }
@@ -189,21 +192,202 @@ namespace Numerals_Eng
         {
             for (int i=0;i<numeralList.Count;i++)
             {
-                if (numeralList.Count<2)
+                if (numeralList.Count == 1)
                 {
-                    MessageBox.Show("Минимальное количество числительных - 2");
+                    if (numeralList[0].GetTypeNum() == "единица") { MessageBox.Show($"После числом единичного формата({numeralList[0].GetValue()}) должна быть сотня"); return false; }
+                    if (numeralList[0].GetTypeNum() == "сотня") { MessageBox.Show($"Перед сотней({numeralList[0].GetValue()}) должно быть число единичного формата"); return false; }
+                    if (numeralList[0].GetTypeNum() == "второй десяток") { MessageBox.Show($"Перед числом формата 11-19({numeralList[0].GetValue()}) должна быть сотня"); return false; }
+                    if (numeralList[0].GetTypeNum() == "десяток") { MessageBox.Show($"Перед числом десятичного формата({numeralList[0].GetValue()}) должна быть сотня"); return false; }
+                }
+
+                if(numeralList[0].GetTypeNum() =="сотня" && numeralList[0].GetTypeNum() == numeralList[1].GetTypeNum())
+                {
+                    string text = String.Empty;
+                    switch (numeralList[1].GetTypeNum())
+                    {
+                        case "единица":
+                            text = "число единичного формата";
+                            break;
+                        case "десяток":
+                            text = "число десятичного формата";
+                            break;
+                        case "второй десяток":
+                            text = "число формата 11-19";
+                            break;
+                        case "сотня":
+                            text = "сотня";
+                            break;
+                    }
+
+                    string text1 = String.Empty;
+                    switch (numeralList[0].GetTypeNum())
+                    {
+                        case "единица":
+                            text1 = "число единичного формата";
+                            break;
+                        case "десяток":
+                            text1 = "число десятичного формата";
+                            break;
+                        case "второй десяток":
+                            text1 = "число формата 11-19";
+                            break;
+                        case "сотня":
+                            text1 = "сотня";
+                            break;
+                    }
+
+                    MessageBox.Show($"Перед {numeralList[1].GetValue()}({text}) не может идти {numeralList[0].GetValue()}({text1})");
                     return false;
                 }
 
-                if(numeralList[0].GetTypeNum()!="единица")
+                if(numeralList[0].GetTypeNum() ==numeralList[1].GetTypeNum())
                 {
-                    MessageBox.Show($"Перед {numeralList[0].GetValue()} должно быть число единичного формата");
-                    return false;   
+                    string text = String.Empty;
+                    switch (numeralList[1].GetTypeNum())
+                    {
+                        case "единица":
+                            text = "число единичного формата";
+                            break;
+                        case "десяток":
+                            text = "число десятичного формата";
+                            break;
+                        case "второй десяток":
+                            text = "число формата 11-19";
+                            break;
+                        case "сотня":
+                            text = "сотня";
+                            break;
+                    }
+
+                    string text1 = String.Empty;
+                    switch (numeralList[0].GetTypeNum())
+                    {
+                        case "единица":
+                            text1 = "число единичного формата";
+                            break;
+                        case "десяток":
+                            text1 = "число десятичного формата";
+                            break;
+                        case "второй десяток":
+                            text1 = "число формата 11-19";
+                            break;
+                        case "сотня":
+                            text1 = "сотня";
+                            break;
+                    }
+
+                    MessageBox.Show($"После {numeralList[0].GetValue()}({text1}) не может идти {numeralList[1].GetValue()}({text})");
+                    return false;
                 }
 
-                if(numeralList.Count>=2 && numeralList[1].GetTypeNum()!="сотня")
+                if (numeralList[0].GetTypeNum() != "единица" && numeralList[1].GetTypeNum() == "сотня")
                 {
-                    MessageBox.Show($"После единицы({numeralList[0].GetValue()}) не может идти {numeralList[1].GetTypeNum()}({numeralList[1].GetValue()})");
+                    string text = String.Empty;
+                    switch (numeralList[0].GetTypeNum())
+                    {
+                        case "единица":
+                            text = "число единичного формата";
+                            break;
+                        case "десяток":
+                            text = "число десятичного формата";
+                            break;
+                        case "второй десяток":
+                            text = "число формата 11-19";
+                            break;
+                        case "сотня":
+                            text = "сотня";
+                            break;
+                    }
+                    MessageBox.Show($"Перед сотней({numeralList[1].GetValue()}) не должно быть {text}({numeralList[0].GetValue()})");
+                    return false;
+                }
+
+                /*if (numeralList[0].GetTypeNum() == "сотня") { MessageBox.Show($"Перед сотней({numeralList[0].GetValue()}) должна быть единица"); return false; }
+                if (numeralList[0].GetTypeNum() == "второй десяток") { MessageBox.Show($"Перед вторым десятком({numeralList[0].GetValue()}) должна быть сотня"); return false; }
+                if (numeralList[0].GetTypeNum() == "десяток") { MessageBox.Show($"Перед десятком({numeralList[0].GetValue()}) должна быть сотня"); return false; }*/
+
+
+                /*if (numeralList[0].GetTypeNum()!="единица" && numeralList[1].GetTypeNum() == "сотня")
+                {
+                    MessageBox.Show($"Вместо {numeralList[0].GetValue()} должно быть число единичного формата");
+                    return false;   
+                }*/
+
+                if (numeralList[0].GetTypeNum() != "единица" && numeralList[1].GetTypeNum() == "единица" && numeralList.Count>2 && numeralList[2].GetTypeNum() == "сотня")
+                {
+                    string text = String.Empty;
+                    switch (numeralList[0].GetTypeNum())
+                    {
+                        case "единица":
+                            text = "число единичного формата";
+                            break;
+                        case "десяток":
+                            text = "число десятичного формата";
+                            break;
+                        case "второй десяток":
+                            text = "число формата 11-19";
+                            break;
+                        case "сотня":
+                            text = "сотня";
+                            break;
+                    }
+                    MessageBox.Show($"Перед числом единичного формата({numeralList[1].GetValue()}) не должно быть {text}({numeralList[0].GetValue()})");
+                    return false;
+                }
+
+                if (numeralList[0].GetTypeNum() != "единица" && numeralList[1].GetTypeNum() != "сотня")
+                {
+                    if(numeralList[0].GetTypeNum() == "сотня")
+                    {
+                        MessageBox.Show($"Перед {numeralList[0].GetValue()}({numeralList[0].GetTypeNum()}) должна быть единица");
+                        return false;
+                    }
+
+                    string text = String.Empty;
+                    switch (numeralList[0].GetTypeNum())
+                    {
+                        case "единица":
+                            text = "число единичного формата";
+                            break;
+                        case "десяток":
+                            text = "число десятичного формата";
+                            break;
+                        case "второй десяток":
+                            text = "число формата 11-19";
+                            break;
+                        case "сотня":
+                            text = "сотня";
+                            break;
+                    }
+                    MessageBox.Show($"Перед {text}({numeralList[0].GetTypeNum()}) должна быть сотня");
+                    return false;
+                }
+
+                /*if (numeralList.Count>=2 && numeralList[0].GetTypeNum() != "единица" && numeralList[1].GetTypeNum()=="сотня")
+                {
+                    MessageBox.Show($"Перед сотней{numeralList[0].GetValue()} должно быть число единичного формата вместо {numeralList[0].GetTypeNum()}({numeralList[1].GetValue()})");
+                    return false;
+                }*/
+
+                if (numeralList.Count>=2 && numeralList[1].GetTypeNum()!="сотня")
+                {
+                    string text = String.Empty;
+                    switch (numeralList[1].GetTypeNum())
+                    {
+                        case "единица":
+                            text = "число единичного формата";
+                            break;
+                        case "десяток":
+                            text = "число десятичного формата";
+                            break;
+                        case "второй десяток":
+                            text = "число формата 11-19";
+                            break;
+                        case "сотня":
+                            text = "сотня";
+                            break;
+                    }
+                    MessageBox.Show($"После числа единичного формата({numeralList[0].GetValue()}) не может идти {text}({numeralList[1].GetValue()})");
                     return false;
                 }
 
@@ -215,25 +399,92 @@ namespace Numerals_Eng
 
                 if (numeralList.Count >= 4 && numeralList[2].GetTypeNum() == "десяток" && numeralList[3].GetTypeNum() != "единица")
                 {
-                    MessageBox.Show($"После десятка({numeralList[2].GetValue()}) не может идти {numeralList[3].GetTypeNum()}({numeralList[3].GetValue()})");
+                    string text = String.Empty;
+                    switch (numeralList[3].GetTypeNum())
+                    {
+                        case "единица":
+                            text = "число единичного формата";
+                            break;
+                        case "десяток":
+                            text = "число десятичного формата";
+                            break;
+                        case "второй десяток":
+                            text = "число формата 11-19";
+                            break;
+                        case "сотня":
+                            text = "сотня";
+                            break;
+                    }
+                    MessageBox.Show($"После числа десятичного формата({numeralList[2].GetValue()}) не может идти {text}({numeralList[3].GetValue()})");
                     return false;
                 }
 
                 if (numeralList.Count >= 4 && numeralList[2].GetTypeNum() == "второй десяток")
                 {
-                    MessageBox.Show($"После второго десятка({numeralList[2].GetValue()}) не может идти {numeralList[3].GetTypeNum()}({numeralList[3].GetValue()})");
+                    string text = String.Empty ;
+                    switch (numeralList[3].GetTypeNum())
+                    {
+                        case "единица":
+                            text = "число единичного формата";
+                            break;
+                        case "десяток":
+                            text = "число десятичного формата";
+                            break ;
+                        case "второй десяток":
+                            text = "число формата 11-19";
+                            break;
+                        case "сотня":
+                            text = "сотня";
+                            break;
+                    }
+                            
+                        
+                    MessageBox.Show($"После числа формата 11-19({numeralList[2].GetValue()}) не может идти {text}({numeralList[3].GetValue()})");
                     return false;
                 }
 
                 if (numeralList.Count >= 4 && numeralList[2].GetTypeNum() == "единица")
                 {
-                    MessageBox.Show($"После единицы({numeralList[2].GetValue()}) не может идти {numeralList[3].GetTypeNum()}({numeralList[3].GetValue()})");
+                    string text = String.Empty;
+                    switch (numeralList[3].GetTypeNum())
+                    {
+                        case "единица":
+                            text = "число единичного формата";
+                            break;
+                        case "десяток":
+                            text = "число десятичного формата";
+                            break;
+                        case "второй десяток":
+                            text = "число формата 11-19";
+                            break;
+                        case "сотня":
+                            text = "сотня";
+                            break;
+                    }
+
+                    MessageBox.Show($"После числа единичного формата({numeralList[2].GetValue()}) не может идти {text}({numeralList[3].GetValue()})");
                     return false;
                 }
 
                 if (numeralList.Count >= 5)
                 {
-                    MessageBox.Show($"После единицы({numeralList[4].GetValue()}) не может идти {numeralList[4].GetTypeNum()}({numeralList[4].GetValue()}).\n" +
+                    string text = String.Empty;
+                    switch (numeralList[4].GetTypeNum())
+                    {
+                        case "единица":
+                            text = "число единичного формата";
+                            break;
+                        case "десяток":
+                            text = "число десятичного формата";
+                            break;
+                        case "второй десяток":
+                            text = "число формата 11-19";
+                            break;
+                        case "сотня":
+                            text = "сотня";
+                            break;
+                    }
+                    MessageBox.Show($"После числа единичного формата({numeralList[4].GetValue()}) не может идти {text}({numeralList[4].GetValue()}).\n" +
                         "Максимальное кол-во числительных - 4");
                     return false;
                 }
